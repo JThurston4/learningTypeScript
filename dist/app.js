@@ -1,10 +1,15 @@
 "use strict";
-console.log('testing testing 1 2 3 4');
-function add(num1, num2) {
-    return num1 + num2;
+class ProjectInput {
+    constructor() {
+        this.templateElement = document.getElementById('project-input');
+        this.hostElement = document.getElementById('app');
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.attach();
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement('afterbegin', this.element);
+    }
 }
-const number1 = 1;
-const number2 = 2.8;
-let result = add(number1, number2);
-console.log(result);
+const ProjInput = new ProjectInput();
 //# sourceMappingURL=app.js.map

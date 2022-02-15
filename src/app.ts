@@ -1,11 +1,22 @@
-console.log('testing testing 1 2 3 4');
+class ProjectInput {
+  templateElement: HTMLTemplateElement;
+  hostElement: HTMLDivElement;
+  element: HTMLFormElement;
 
-function add(num1: number, num2: number) {
-  return num1 + num2
+
+  constructor() {
+    this.templateElement = document.getElementById('project-input')! as HTMLTemplateElement;
+    this.hostElement = document.getElementById('app')! as HTMLDivElement;
+
+    const importedNode = document.importNode(this.templateElement.content, true);
+    this.element = importedNode.firstElementChild as HTMLFormElement;
+    this.attach();
+
+  }
+
+  private attach() {
+    this.hostElement.insertAdjacentElement('afterbegin', this.element);
+  }
 }
 
-const number1 = 1;
-const number2 = 2.8;
-
-let result = add(number1, number2);
-console.log(result)
+const ProjInput = new ProjectInput();
