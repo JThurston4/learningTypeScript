@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 // autobind decorator
 function autobind(_, _2, descriptor) {
     const originalMethod = descriptor.value;
-    console.log(descriptor);
     const adjDescriptor = {
         configurable: true,
         get() {
@@ -36,10 +35,30 @@ class ProjectInput {
     }
     submitHandler(event) {
         event.preventDefault();
-        console.log(this.titleInputElement.value);
+        const userInput = this.gatherUserInput();
+        if (Array.isArray(userInput)) {
+            const [title, description, people] = userInput;
+            console.log(title, description, people);
+            this.clearInput();
+        }
     }
     configure() {
         this.element.addEventListener('submit', this.submitHandler);
+    }
+    gatherUserInput() {
+        const enteredTitle = this.titleInputElement.value;
+        const enteredDescription = this.descriptionInputElement.value;
+        const enteredPeople = Number(this.peopleInputElement.value);
+        if (enteredTitle.trim().length === 0 || enteredDescription.trim().length === 0 || enteredPeople === 0) {
+            alert('invalid input');
+            return;
+        }
+        return [enteredTitle, enteredDescription, enteredPeople];
+    }
+    clearInput() {
+        this.titleInputElement.value = '';
+        this.descriptionInputElement.value = '';
+        this.peopleInputElement.value = '';
     }
 }
 __decorate([
