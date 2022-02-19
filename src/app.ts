@@ -11,6 +11,15 @@ function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   return adjDescriptor
 }
 
+interface Validatable {
+  value: string | number;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number;
+  max?: number;
+}
+
 class ProjectInput {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
@@ -56,12 +65,57 @@ class ProjectInput {
     this.element.addEventListener('submit', this.submitHandler);
   }
 
+
+
+  private validate(option: Validatable) {
+    let isValid = true;
+    if (option.required) {
+      isValid = isValid && option.value.toString().trim().length > 0;
+    }
+
+    if (option.minLength && typeof option.value === 'string') {
+      isValid = isValid && option.value.trim().length >= option.minLength
+    }
+
+    if (option.maxLength && typeof option.value === 'string') {
+      isValid = isValid && option.value.trim().length <= option.maxLength
+    }
+
+    if (option.min != null && typeof option.value === 'number') {
+      isValid = isValid && option.value >= option.min
+    }
+
+    if (option.max != null && typeof option.value === 'number') {
+      isValid = isValid && option.value <= option.max
+    }
+    return isValid;
+  }
+
   private gatherUserInput():[string, string, number] | void{
     const enteredTitle = this.titleInputElement.value;
     const enteredDescription = this.descriptionInputElement.value;
     const enteredPeople = Number(this.peopleInputElement.value);
 
-    if (enteredTitle.trim().length === 0 || enteredDescription.trim().length === 0 || enteredPeople === 0) {
+    const titleValidateable: Validatable = {
+      value: enteredTitle,
+      required: true
+    }
+
+    const descriptionValidateable: Validatable = {
+      value: enteredDescription,
+      required: true,
+      minLength: 5,
+      maxLength: 100
+    }
+
+    const peopleValidateable: Validatable = {
+      value: Number(enteredPeople),
+      required: true,
+      min: 1,
+      max: 5
+    }
+
+    if (!this.validate(titleValidateable) || !this.validate(descriptionValidateable) || !this.validate(peopleValidateable)) {
       alert('invalid input')
       return;
     } 

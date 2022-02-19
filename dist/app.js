@@ -45,11 +45,46 @@ class ProjectInput {
     configure() {
         this.element.addEventListener('submit', this.submitHandler);
     }
+    validate(option) {
+        let isValid = true;
+        if (option.required) {
+            isValid = isValid && option.value.toString().trim().length > 0;
+        }
+        if (option.minLength && typeof option.value === 'string') {
+            isValid = isValid && option.value.trim().length >= option.minLength;
+        }
+        if (option.maxLength && typeof option.value === 'string') {
+            isValid = isValid && option.value.trim().length <= option.maxLength;
+        }
+        if (option.min != null && typeof option.value === 'number') {
+            isValid = isValid && option.value >= option.min;
+        }
+        if (option.max != null && typeof option.value === 'number') {
+            isValid = isValid && option.value <= option.max;
+        }
+        return isValid;
+    }
     gatherUserInput() {
         const enteredTitle = this.titleInputElement.value;
         const enteredDescription = this.descriptionInputElement.value;
         const enteredPeople = Number(this.peopleInputElement.value);
-        if (enteredTitle.trim().length === 0 || enteredDescription.trim().length === 0 || enteredPeople === 0) {
+        const titleValidateable = {
+            value: enteredTitle,
+            required: true
+        };
+        const descriptionValidateable = {
+            value: enteredDescription,
+            required: true,
+            minLength: 5,
+            maxLength: 100
+        };
+        const peopleValidateable = {
+            value: Number(enteredPeople),
+            required: true,
+            min: 1,
+            max: 5
+        };
+        if (!this.validate(titleValidateable) || !this.validate(descriptionValidateable) || !this.validate(peopleValidateable)) {
             alert('invalid input');
             return;
         }
