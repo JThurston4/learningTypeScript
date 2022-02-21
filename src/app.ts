@@ -1,15 +1,5 @@
-// autobind decorator
-function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value;
-  const adjDescriptor: PropertyDescriptor = {
-    configurable: true,
-    get() {
-      const boundFn = originalMethod.bind(this);
-      return boundFn;
-    }
-  }
-  return adjDescriptor
-}
+import {autobind} from './util.js';
+import ProjectList from './ProjectList.js';
 
 interface Validatable {
   value: string | number;
@@ -130,3 +120,7 @@ class ProjectInput {
  }
 
 const ProjInput = new ProjectInput();
+const activeProjList = new ProjectList('active');
+const finshedProjList = new ProjectList('finished');
+
+console.log(ProjInput, activeProjList, finshedProjList);
